@@ -1,56 +1,527 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gintaras Gencas — Web Developer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gintaras Gencas — Web Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-primary: #0d0f14;
+      --bg-secondary: #13151c;
+      --bg-card: #181b24;
+      --bg-hover: #1e2230;
+      --accent: #6c63ff;
+      --accent-dim: rgba(108, 99, 255, 0.12);
+      --accent-border: rgba(108, 99, 255, 0.3);
+      --text-primary: #e8e6f0;
+      --text-secondary: #8b8fa8;
+      --text-muted: #555870;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.1);
+      --green: #3ecf8e;
+      --green-dim: rgba(62, 207, 142, 0.1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+      padding: 3rem 1.5rem;
+    }
+
+    /* subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(108,99,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,99,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      max-width: 780px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── HEADER ── */
+    header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .header-left h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #e8e6f0 0%, #6c63ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.4rem;
+    }
+
+    .header-left .role {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .availability {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--green);
+      background: var(--green-dim);
+      border: 1px solid rgba(62, 207, 142, 0.2);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .availability::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 640px) {
+      main { grid-template-columns: 1fr; }
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      margin-bottom: 2rem;
+    }
+
+    .section-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── ABOUT ── */
+    .about-text {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      line-height: 1.8;
+    }
+
+    .about-text strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* ── EXPERIENCE ── */
+    .experience-item {
+      padding: 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .experience-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .experience-item:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-hover);
+    }
+
+    .experience-item:hover::before {
+      opacity: 1;
+    }
+
+    .exp-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .exp-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .exp-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      padding: 2px 8px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    .exp-company {
+      font-size: 0.82rem;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+      font-weight: 400;
+    }
+
+    .exp-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill-pill {
+      font-size: 0.78rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--accent-border);
+      background: var(--accent-dim);
+      color: #a89fff;
+      font-weight: 400;
+      transition: all 0.15s;
+      cursor: default;
+    }
+
+    .skill-pill:hover {
+      background: rgba(108, 99, 255, 0.22);
+      border-color: rgba(108, 99, 255, 0.5);
+      color: var(--text-primary);
+    }
+
+    /* ── CONTACT ── */
+    .contact-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .contact-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+    }
+
+    .contact-list .contact-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .contact-list a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .contact-list a:hover {
+      color: var(--accent);
+    }
+
+    /* ── LANGUAGES ── */
+    .lang-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+    }
+
+    .lang-name {
+      color: var(--text-secondary);
+    }
+
+    .lang-level {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding: 2px 8px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── LOCATION ── */
+    .location-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer-links a {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+  </style>
 </head>
 <body>
+  <div class="wrapper">
+
     <header>
+      <div class="header-left">
         <h1>Gintaras Gencas</h1>
-        <p>Aspiring Web Developer</p>
+        <p class="role">Aspiring Web Developer</p>
+      </div>
+      <span class="availability">Available for work</span>
     </header>
 
-<main>
-    <section>
-        <h2>About</h2>
-            <p>I am Gintaras, originally from Lithuania, and have been living in Poeldijk for 4 years. Working with IT is something I enjoy very much. Working on websites and software, figuring things out and improving them, aligns with my inquisitive attitude and analytical skills. I derive great satisfaction from providing valuable solutions that help others. Others describe me as reliable, creative, and flexible.
+    <main>
+      <div class="content">
+
+        <section>
+          <div class="section-label">About</div>
+          <p class="about-text">
+            I am <strong>Gintaras</strong>, originally from Lithuania, and have been living in
+            Poeldijk for 4 years. Working with IT is something I enjoy very much —
+            developing websites and software, figuring things out and improving them,
+            aligns with my inquisitive attitude and analytical skills. I derive great
+            satisfaction from providing <strong>valuable solutions that help others</strong>.
+            Others describe me as reliable, creative, and flexible.
+          </p>
+        </section>
+
+        <section>
+          <div class="section-label">Experience</div>
+
+          <article class="experience-item">
+            <div class="exp-header">
+              <span class="exp-title">Web Developer</span>
+              <span class="exp-date">Jan 2024 — Present</span>
+            </div>
+            <p class="exp-company">Brasbits (Doel Delfland), Delft — Volunteer</p>
+            <p class="exp-desc">
+              Developing websites and software solutions, managing, modifying, and
+              testing websites. Advising and supporting clients in implementing changes.
             </p>
-    </section>
+          </article>
 
-    <section>
-        <h2>Skills</h2>
-            <ul>
-                <li>HTML</li>
-                <li>CSS</li>
-                <li>JavaScript</li>
-                <li>PHP</li>
-                <li>Git</li>
-            </ul>
-    </section>
+          <article class="experience-item">
+            <div class="exp-header">
+              <span class="exp-title">Packing Employee</span>
+              <span class="exp-date">Jul 2017 — Jul 2019</span>
+            </div>
+            <p class="exp-company">Enigma Flowers Trading B.V., Naaldwijk</p>
+            <p class="exp-desc">
+              Packing, sorting, and preparing orders in a fast-paced logistics environment.
+            </p>
+          </article>
 
-    <section>
-        <h2>Experience</h2>
+          <article class="experience-item">
+            <div class="exp-header">
+              <span class="exp-title">Construction Labourer</span>
+              <span class="exp-date">Sep 2007 — Mar 2010</span>
+            </div>
+            <p class="exp-company">Allied Site Personnel, London</p>
+            <p class="exp-desc">
+              Assisting with work on construction sites across London.
+            </p>
+          </article>
+        </section>
 
-            <article>
-                <h3>Web Developer — Brasbits, Delft</h3>
-                    <p>Jan 2024 — Present</p>
-                    <p>Developing websites, software solutions, managing and testing sites.</p>
-            </article>
+      </div>
 
-            <article>
-                <h3>Packing Employee — Enigma Flowers, Naaldwijk</h3>
-                    <p>Jul 2017 — Jul 2019</p>
-                    <p>Packing, sorting, preparing orders.</p>
-            </article>
-    </section>
-</main>
+      <aside class="sidebar">
 
-<footer>
-    <p>ggencas@proton.me</p>
-    <a href="https://www.linkedin.com/in/gintaras-gencas/">LinkedIn</a>
-    <a href="https://github.com/ggencas2/joke-generator">Joke Generator Github</a>
-    <a href="https://github.com/ggencas2/todo-app-v2">To Do App</a>
-</footer>
+        <section>
+          <div class="section-label">Skills</div>
+          <div class="skills-grid">
+            <span class="skill-pill">HTML5</span>
+            <span class="skill-pill">CSS3</span>
+            <span class="skill-pill">JavaScript</span>
+            <span class="skill-pill">PHP</span>
+            <span class="skill-pill">Git</span>
+            <span class="skill-pill">GitHub</span>
+            <span class="skill-pill">Flexbox</span>
+            <span class="skill-pill">CSS Grid</span>
+            <span class="skill-pill">REST APIs</span>
+            <span class="skill-pill">Responsive</span>
+            <span class="skill-pill">DOM</span>
+            <span class="skill-pill">localStorage</span>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-label">Contact</div>
+          <ul class="contact-list">
+            <li>
+              <span class="contact-icon">@</span>
+              <a href="mailto:ggencas@proton.me">ggencas@proton.me</a>
+            </li>
+            <li>
+              <span class="contact-icon">in</span>
+              <a href="https://www.linkedin.com/in/gintaras-gencas/" target="_blank">LinkedIn</a>
+            </li>
+            <li>
+              <span class="contact-icon">gh</span>
+              <a href="https://github.com/ggencas2" target="_blank">github.com/ggencas2</a>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <div class="section-label">Location</div>
+          <p class="location-text">📍 Poeldijk, Netherlands</p>
+        </section>
+
+        <section>
+          <div class="section-label">Languages</div>
+          <div class="lang-item">
+            <span class="lang-name">Lithuanian</span>
+            <span class="lang-level">Native</span>
+          </div>
+          <div class="lang-item">
+            <span class="lang-name">English</span>
+            <span class="lang-level">Fluent</span>
+          </div>
+          <div class="lang-item">
+            <span class="lang-name">Dutch</span>
+            <span class="lang-level">Intermediate</span>
+          </div>
+        </section>
+
+      </aside>
+    </main>
+
+    <footer>
+      <p class="footer-note">Built with HTML & CSS — no frameworks</p>
+      <div class="footer-links">
+        <a href="https://github.com/ggencas2/todo-app-v2" target="_blank">To-Do App v2 →</a>
+        <a href="https://ggencas2.github.io/joke-generator" target="_blank">Joke Generator →</a>
+      </div>
+    </footer>
+
+  </div>
 </body>
 </html>
